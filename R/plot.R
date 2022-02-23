@@ -142,8 +142,8 @@ autoplot.calibrationband <- function(object, ...,
   p <- p+
     ggplot2::xlab("Predicted probability")+
     ggplot2::ylab("Conditional event probability")+
-    theme_bw()+
-    coord_fixed(ratio = 1)
+    ggplot2::theme_bw()+
+    ggplot2::coord_fixed(ratio = 1)
 
   p
 }
