@@ -18,4 +18,5 @@ Imports:
     tibble, 
     dplyr, 
     data.table, 
-    tidyr
+    tidyr, 
+    ggalt
