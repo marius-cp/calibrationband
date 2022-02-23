@@ -14,6 +14,9 @@ dat <- tibble(pr=x, s=s, cep = p(pr,s), y=rbinom(n,1,cep))%>% arrange(pr)
 isoba <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3)
 isoba
 summary(isoba)
+nc <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3, nc=T)
+nc$bands
+summary(isoba)
 
 ggsave("/Users/mariuspuke/Downloads/calibatest.pdf", width = 5, height = 5)
 
@@ -23,7 +26,7 @@ autoplot(isoba, diag = 1, points = 700,approx.equi=1, cut.bands = T)
 
 ep <- plot(isoba)
 ep$x_lwr
-autoplot(isoba, diag = "red", points = 700,approx.equi=NULL)+
+autoplot(isoba, diag = "red", points = 700,approx.equi=T)+
   geom_line(mapping=aes(x=ep$x_lwr, y=ep$lwr), color = "green")+
   geom_line(mapping=aes(x=ep$x_upr, y=ep$upr), color = "green")
 
