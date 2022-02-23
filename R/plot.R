@@ -53,10 +53,10 @@ autoplot.calibrationband <- function(object, ...,
     # cal tibble holds information on areas of (mis)calibration
     # use equidistant  points (700) in addition to the important areas to get nicely looking transitions
     add_points <-
-      r$cal %>% select(min_x,max_x) %>%
+      r$cal %>% dplyr::select(min_x,max_x) %>%
       tidyr::pivot_longer(everything(), names_to = c(".value", "set"),
                   names_pattern = "(.)(.)") %>%
-      filter(m >= min(r$cases$x) & m <= max(r$cases$x))
+      dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
 
     band.length <-
       c(seq(
@@ -141,7 +141,10 @@ autoplot.calibrationband <- function(object, ...,
 
   p <- p+
     ggplot2::xlab("Predicted probability")+
-    ggplot2::ylab("Conditional event probability")
+    ggplot2::ylab("Conditional event probability")+
+    theme_bw()+
+    coord_fixed(ratio = 1)
+
   p
 }
 

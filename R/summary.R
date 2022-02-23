@@ -7,9 +7,9 @@
 summary.calibrationband <- function(object, ...){
 
   sr <- object$cal  %>%
-    filter(out==1) %>%
-    arrange(desc(range)) %>%
-    select(min_x,max_x)
+    dplyr::filter(out==1) %>%
+    dplyr::arrange(dplyr::desc(range)) %>%
+    dplyr::select(min_x,max_x)
 
   class(sr) <- c("summary.calibrationband", class(sr))
   return(sr)
