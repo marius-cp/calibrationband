@@ -29,7 +29,7 @@ nc$bands
 
 ep.nc <- plot(nc)
 ep.nc$x_lwr
-autoplot(nc, diag = "red", points = 100,approx.equi=T)+
+autoplot(nc, diag = "red", points = 100,approx.equi=T, cut.bands = T)+
   geom_line(mapping=aes(x=ep.nc$x_lwr, y=ep.nc$lwr), color = "green")+
   geom_line(mapping=aes(x=ep.nc$x_upr, y=ep.nc$upr), color = "green")+
   xlim(0,.2)+
