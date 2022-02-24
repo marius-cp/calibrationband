@@ -55,8 +55,11 @@ autoplot.calibrationband <- function(object, ...,
     add_points <-
       r$cal %>% dplyr::select(min_x,max_x) %>%
       tidyr::pivot_longer(everything(), names_to = c(".value", "set"),
-                  names_pattern = "(.)(.)") %>%
-      dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
+                  names_pattern = "(.)(.)")
+
+    if(identical(cut.bands,T)){
+      add_points <- add_points %>% dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
+      }
 
     band.length <-
       c(seq(
@@ -98,8 +101,9 @@ autoplot.calibrationband <- function(object, ...,
       ggplot2::scale_colour_gradient(
         low = "gray", high = "red", guide = "none", limits=c(0,1)
         )
-    }
+  }
 
+  if(is.null(approx.equi)){
   p <- p +
     ggplot2::geom_step(
       p_dat,
@@ -109,6 +113,19 @@ autoplot.calibrationband <- function(object, ...,
       p_dat,
       mapping = ggplot2::aes(x=x_, y=upr)
       )
+  } else {
+    p <- p +
+      ggplot2::geom_step(
+        p_dat,
+        mapping = ggplot2::aes(x=x_,y=lwr)
+      )+
+      ggplot2::geom_step(
+        p_dat,
+        mapping = ggplot2::aes(x=x_, y=upr),  direction = "vh"
+      )
+  }
+
+
   if(is.null(shaddow)){
     p <- p +
       ggplot2::geom_ribbon(

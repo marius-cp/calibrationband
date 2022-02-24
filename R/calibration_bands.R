@@ -155,19 +155,16 @@ calibration_bands <- function(
       # non-crossing
       if (isTRUE(nc)) {
         isoy_short <- isoy[c(which(x[-n] < x[-1]), n)]
-        x_new <- sort(unique(c(x_unique, x_round)))
-        upr <- pmax(
-          interpolate(x = x_round, y = upr, xout = x_new, right = 1),
-          interpolate(x = x_unique, y = isoy_short, xout = x_new, right = 1)
-        )
-        lwr <- pmin(
-          interpolate(x = x_round, y = lwr, xout = x_new, right = 0),
-          interpolate(x = x_unique, y = isoy_short, xout = x_new, right = 0)
-        )
-        x <- x_new
-      } else {
-        x <- x_round
+        upr_iso <-
+          interpolate(x = x_unique, y = isoy_short, xout = x_round, right = 1)
+        upr_iso[is.na(upr_iso)] <- 0
+        lwr_iso <-
+          interpolate(x = x_unique, y = isoy_short, xout = x_round, right = 0)
+        lwr_iso[is.na(lwr_iso)] <- 1
+        lwr <- pmin(lwr, lwr_iso)
+        upr <- pmax(upr, upr_iso)
       }
+      x <- x_round
     }
   }
 
