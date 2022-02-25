@@ -23,43 +23,43 @@ ggplot2::autoplot
 #' between the minimal and maximal prediction value is colored.
 #' @param cut.bands Cut the bands at most extreme prediction values. Bands will not be extended to 0 and 1 respectively.
 #' @param ... further arguments to be passed to or from methods;
-#' @importFrom ggalt StatStepribbon
 #' @rdname autoplot.calibrationband
 #' @export
 #'
 
 autoplot.calibrationband <- function(object, ...,
-                             approx.equi=NULL,
-                             points = 700,
-                             isoreg = NULL,
-                             shaddow = NULL,
-                             diag = "default",
-                             cut.bands=FALSE){
+                                     approx.equi=F,
+                                     points = 500,
+                                     isoreg = T,
+                                     shaddow = "blue",# NA omits
+                                     diag = "red",#"default",
+                                     cut.bands=FALSE){
   # return a ggplot 2 object of Isobands
   r <- object
 
   p <- ggplot2::ggplot()
 
-  if(is.null(approx.equi)){
-
-    p_dat <-
-      tibble(
-        x_ = r$bands$x,
-        lwr=r$bands$upr,
-        upr=r$bands$lwr
-      )
-
+  if(isFALSE(approx.equi)){
+    if(isTRUE(cut.bands)){
+      p_dat <-  r$bands %>%
+        filter(
+          x <= max(r$cases$x) &  x >= min(r$cases$x)
+        )
+    } else{
+      p_dat <- r$bands
+    }
   } else {
     # cal tibble holds information on areas of (mis)calibration
     # use equidistant  points (700) in addition to the important areas to get nicely looking transitions
     add_points <-
       r$cal %>% dplyr::select(min_x,max_x) %>%
       tidyr::pivot_longer(everything(), names_to = c(".value", "set"),
-                  names_pattern = "(.)(.)")
+                          names_pattern = "(.)(.)")
 
-    if(identical(cut.bands,T)){
-      add_points <- add_points %>% dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
-      }
+    if(isTRUE(cut.bands)){
+      add_points <- add_points %>%
+        dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
+    }
 
     band.length <-
       c(seq(
@@ -68,12 +68,13 @@ autoplot.calibrationband <- function(object, ...,
         length.out = points
       ),
       add_points$m
-      ) %>% sort()
+      ) %>%
+      sort()
 
 
     p_dat <-
       tibble(
-        x_ = band.length,
+        x = band.length,
         lwr=interpolate(x=r$bands$x, y= r$bands$lwr, xout=band.length, right = 0),
         upr=interpolate(x=r$bands$x, y= r$bands$upr, xout=band.length, right = 1)
       )
@@ -83,10 +84,10 @@ autoplot.calibrationband <- function(object, ...,
     p <- p +  ggplot2::geom_segment(ggplot2::aes(x=0,y=0,xend=1,yend=1))
   } else {
     if(identical(cut.bands,T)){
-     diag_dat <-  r$cal %>%
-       filter(
-         max_x <= max(r$cases$x) &  min_x >= min(r$cases$x)
-         )
+      diag_dat <-  r$cal %>%
+        filter(
+          max_x <= max(r$cases$x) &  min_x >= min(r$cases$x)
+        )
     } else {
       diag_dat <-  r$cal
     }
@@ -95,56 +96,16 @@ autoplot.calibrationband <- function(object, ...,
         diag_dat,
         mapping=ggplot2::aes(
           x=min_x,xend=max_x,
-          y=min_x, yend=max_x, color=out),
+          y=min_x, yend=max_x, color=out
+        ),
         lineend="butt"
       )+
       ggplot2::scale_colour_gradient(
-        low = "gray", high = "red", guide = "none", limits=c(0,1)
-        )
-  }
-
-  if(is.null(approx.equi)){
-  p <- p +
-    ggplot2::geom_step(
-      p_dat,
-      mapping = ggplot2::aes(x=x_,y=lwr), direction = "vh"
-      )+
-    ggplot2::geom_step(
-      p_dat,
-      mapping = ggplot2::aes(x=x_, y=upr)
-      )
-  } else {
-    p <- p +
-      ggplot2::geom_step(
-        p_dat,
-        mapping = ggplot2::aes(x=x_,y=lwr)
-      )+
-      ggplot2::geom_step(
-        p_dat,
-        mapping = ggplot2::aes(x=x_, y=upr),  direction = "vh"
+        low = "gray", high = diag, guide = "none", limits=c(0,1)
       )
   }
 
-
-  if(is.null(shaddow)){
-    p <- p +
-      ggplot2::geom_ribbon(
-        p_dat,
-        mapping = ggplot2::aes(ymin=lwr,ymax=upr,x=x_), color = NA,
-        alpha=.1, fill = "blue",stat=ggalt::StatStepribbon,
-        direction = "vh"
-        ) +
-      ggplot2::geom_ribbon(
-        p_dat,
-        mapping = ggplot2::aes(ymin=lwr,ymax=upr,x=x_), color = NA,
-        alpha=.1, fill = "blue",stat=ggalt::StatStepribbon,
-        direction = "hv"
-      )
-
-  }
-
-
-  if(is.null(isoreg)){
+  if(isTRUE(isoreg)){
     p<- p+
       ggplot2::geom_line(
         data= tidyr::pivot_longer(
@@ -152,9 +113,21 @@ autoplot.calibrationband <- function(object, ...,
           cols = dplyr::all_of(c("x_min", "x_max")
           ),
           values_to = "x"),
-        ggplot2::aes(y=CEP_pav,x=x))
+        ggplot2::aes(y=CEP_pav,x=x),
+        color="darkgray")
   }
 
+  # construct plot data for upr/lwr bound and ribbon
+  connect.points <- p.dat(bands=p_dat)
+  ribbon.dat = ribbon(p.dat = connect.points)
+
+  p <-   p + geom_polygon(
+    data=ribbon.dat,
+    mapping = aes(x_lwr, lwr),
+    colour = 'black',
+    fill = shaddow,
+    alpha = 0.1
+  )
 
   p <- p+
     ggplot2::xlab("Predicted probability")+
@@ -164,7 +137,6 @@ autoplot.calibrationband <- function(object, ...,
 
   p
 }
-
 
 #' Plotting monotone confidence bands
 #'

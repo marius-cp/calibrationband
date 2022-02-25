@@ -7,11 +7,11 @@
 \method{autoplot}{calibrationband}(
   object,
   ...,
-  approx.equi = NULL,
-  points = 700,
-  isoreg = NULL,
-  shaddow = NULL,
-  diag = "default",
+  approx.equi = F,
+  points = 500,
+  isoreg = T,
+  shaddow = "blue",
+  diag = "red",
   cut.bands = FALSE
 )
 }

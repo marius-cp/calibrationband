@@ -17,11 +17,31 @@ summary(isoba)
 isoba$bands
 
 ep.iso <- plot(isoba)
-ep.iso$x_lwr
-autoplot(isoba, diag = "red",approx.equi=NULL, nc = TRUE)+
+autoplot(isoba, diag = "red",approx.equi=F, cut.bands = T)+
   geom_line(mapping=aes(x=ep.iso$x_lwr, y=ep.iso$lwr), color = "green")+
-  geom_line(mapping=aes(x=ep.iso$x_upr, y=ep.iso$upr), color = "green")+
-  xlim(0,.2)+
+  geom_line(mapping=aes(x=ep.iso$x_upr, y=ep.iso$upr), color = "green")
+
+p <- p+
+  geom_line(mapping=aes(x=ep.iso$x_lwr, y=ep.iso$lwr), color = "green")+
+  geom_line(mapping=aes(x=ep.iso$x_upr, y=ep.iso$upr), color = "green")
+p
+
+autoplot(isoba, diag = "red",approx.equi=F, cut.bands = F)+
+  geom_line(mapping=aes(x=ep.iso$x_lwr, y=ep.iso$lwr), color = "green")+
+  geom_line(mapping=aes(x=ep.iso$x_upr, y=ep.iso$upr), color = "green")
+
+
+autoplot(isoba, diag = "red",approx.equi=T, cut.bands = F, points = 20)+
+  geom_line(mapping=aes(x=ep.iso$x_lwr, y=ep.iso$lwr), color = "green")+
+  geom_line(mapping=aes(x=ep.iso$x_upr, y=ep.iso$upr), color = "green")
+
+autoplot(isoba, diag = "red",approx.equi=T, cut.bands = T, points = 20)+
+  geom_line(mapping=aes(x=ep.iso$x_lwr, y=ep.iso$lwr), color = "green")+
+  geom_line(mapping=aes(x=ep.iso$x_upr, y=ep.iso$upr), color = "green")
+coord_cartesian(xlim = c(0, .2), ylim = c(0,.2))
+
+
+xlim(0,.2)+
   ylim(0,.2)
 
 nc <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3, nc=T)

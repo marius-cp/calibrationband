@@ -19,4 +19,7 @@ Imports:
     dplyr, 
     data.table, 
     tidyr, 
-    ggalt
+    sp, 
+    methods, 
+    base, 
+    stats
