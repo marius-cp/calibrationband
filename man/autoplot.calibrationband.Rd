@@ -2,17 +2,27 @@
 % Please edit documentation in R/plot.R
 \name{autoplot.calibrationband}
 \alias{autoplot.calibrationband}
+\alias{autolayer.calibrationband}
 \title{Plotting monotone confidence bands}
 \usage{
 \method{autoplot}{calibrationband}(
   object,
   ...,
-  approx.equi = F,
-  points = 500,
-  isoreg = T,
-  shaddow = "blue",
-  diag = "red",
-  cut.bands = FALSE
+  approx.equi = NULL,
+  cut.bands = F,
+  p_ribbon = NULL,
+  p_isoreg = NULL,
+  p_diag = NULL
+)
+
+\method{autolayer}{calibrationband}(
+  object,
+  ...,
+  approx.equi = NULL,
+  cut.bands = F,
+  p_ribbon = NA,
+  p_isoreg = NA,
+  p_diag = NA
 )
 }
 \arguments{
@@ -21,29 +31,47 @@
 \item{...}{further arguments to be passed to or from methods;}
 
 \item{approx.equi}{If \code{NULL}, the bands are drawn for each
-prediction-realization pair. In large data sets this might result in capacity
-consuming plots. Other choices than \code{NULL} result in equidistant
-interpolation at by default 700 \code{points}. See bellow.}
+prediction-realization pair. If it is a scalar, say \code{z},  the bounds are
+approximated at \code{z} equidistant point on the x-axis. Also see the effect of
+\code{cut.bands} if a scalar is specified. If  \code{approx.equi} is a vector
+with entries \code{a_1, \dots, a_i in (0,1)}, the bounds are approximated at
+these particular points.
 
-\item{points}{Interpolate at \code{points} equidistant values between 0 and 1
-(if \code{cut.bands=F}) or between the most extreme prediction values
-(if \code{cut.bands=T}). Note, for smooth accurate illustration in transition areas
-(changes between miscalibrated and calibrated areas) we add those critical
-additional points the initial value of  \code{points}.}
+In large data sets, \code{approx.equi = NULL}  might result in
+capacity consuming plots. In these cases we recommend to consider the other
+choices.
+Note, in these cases and for  accurate illustration in transition areas
+(changes between miscalibrated and calibrated areas) we add important
+additional points the initial vector/scalar of  \code{approx.equi}.}
 
-\item{isoreg}{If \code{NULL}, raws the isotonic/monotonic non-parametric
-regression curve.}
+\item{cut.bands}{Cut the bands at most extreme prediction values.
+Bands will not be extended to 0 and 1 respectively if option is set equal to true.
+Note, that has no effect if  \code{approx.equi} is a vector.}
 
-\item{shaddow}{If \code{NULL}, raws a blueish ribbon.}
+\item{p_ribbon}{If non \code{NULL}, a ribbon is drwan. Contains a list of
+arguments for \code{ggplot2::geom_polygon}.}
 
-\item{diag}{If default, a plain, black diagonal line between the coordinates
-0,0 and 1,1 is draw. Otherwise, the diagonal line is colored
-(red if miscalibrated, gray if calibrated).
-Note, if the latter is selected and if \code{cut.bands=T}, only the area in
-between the minimal and maximal prediction value is colored.}
+\item{p_isoreg}{If non \code{NULL} the istonic regression curve is drawn.
+Contains a list of arguments for \code{ggplot2::geom_line}.}
 
-\item{cut.bands}{Cut the bands at most extreme prediction values. Bands will not be extended to 0 and 1 respectively.}
+\item{p_diag}{If non \code{NULL}, the diagonal line is drwan.
+Contains list of arguments for \code{ggplot2::geom_segment}.}
 }
 \description{
 Plotting monotone confidence bands
+}
+\details{
+\code{autoplot} behaves like any \code{ggplot() + layer()} combination. T
+That means, customized plots should be created using \code{autoplot} and
+\code{autolayer}.
+
+Setting any of the \code{p_*} arguments to \code{NA} disables that layer.
+
+Default parameter values
+
+\tabular{ll}{
+\code{p_isoreg} \tab \code{list(color = "darkgray")} \cr
+\code{p_diag} \tab \code{list(color = "black", fill="blue", alpha = .1)} \cr
+\code{p_ribbon} \tab \code{ list(low = "gray", high = "red", guide = "none", limits=c(0,1))}
+}
 }
