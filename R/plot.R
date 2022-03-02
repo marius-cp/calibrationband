@@ -45,6 +45,8 @@ ggplot2::autolayer
 #' \code{p_diag} \tab \code{list(color = "black", fill="blue", alpha = .1)} \cr
 #' \code{p_ribbon} \tab \code{ list(low = "gray", high = "red", guide = "none", limits=c(0,1))}
 #' }
+#' @name autoplot.calibrationband
+NULL
 # @examples
 #  s=.8
 #  n=10000
@@ -72,8 +74,8 @@ ggplot2::autolayer
 
 
 #' @rdname autoplot.calibrationband
-#' @export
 #'
+#' @export
 autoplot.calibrationband <- function(object, ...,
                                      approx.equi=NULL,
                                      cut.bands=F,
@@ -87,10 +89,10 @@ autoplot.calibrationband <- function(object, ...,
     autolayer.calibrationband(object=object, ...,
                               approx.equi=approx.equi,
                               cut.bands=cut.bands,
-                              p_ribbon=p_ribbon,
+                              p_diag = p_diag,
                               p_isoreg=p_isoreg,
-                              p_diag = p_diag
-    )+
+                              p_ribbon=p_ribbon
+                              )+
     ggplot2::xlab("Predicted probability")+
     ggplot2::ylab("Calibration Curve")+
     ggplot2::theme_bw()+
@@ -110,9 +112,10 @@ autolayer.calibrationband <-
   function(object, ...,
            approx.equi=NULL,
            cut.bands=F,
-           p_ribbon=NA,
+           p_diag = NA,
            p_isoreg = NA,
-           p_diag = NA
+           p_ribbon=NA
+
            ){
 
     r <- object
@@ -121,7 +124,7 @@ autolayer.calibrationband <-
     if(is.null(approx.equi)){
       if(isTRUE(cut.bands)){
         p_dat <-  r$bands %>%
-          filter(
+          dplyr::filter(
             x <= max(r$cases$x) &  x >= min(r$cases$x)
           )
       } else{
@@ -132,8 +135,11 @@ autolayer.calibrationband <-
       # use equidistant  points (700) in addition to the important areas to get nicely looking transitions
       add_points <-
         r$cal %>% dplyr::select(min_x,max_x) %>%
-        tidyr::pivot_longer(everything(), names_to = c(".value", "set"),
-                            names_pattern = "(.)(.)")
+        tidyr::pivot_longer(
+          tidyselect::everything(),
+          names_to = c(".value", "set"),
+          names_pattern = "(.)(.)"
+          )
 
       if(isTRUE(cut.bands)){
         add_points <- add_points %>%
@@ -152,7 +158,7 @@ autolayer.calibrationband <-
 
 
       p_dat <-
-        tibble(
+        tibble::tibble(
           x = band.length,
           lwr=interpolate(x=r$bands$x, y= r$bands$lwr, xout=band.length, right = 0),
           upr=interpolate(x=r$bands$x, y= r$bands$upr, xout=band.length, right = 1)
@@ -161,22 +167,24 @@ autolayer.calibrationband <-
       # warn here if to less entries in vector
       add_points <-
         r$cal %>% dplyr::select(min_x,max_x) %>%
-        tidyr::pivot_longer(everything(), names_to = c(".value", "set"),
-                            names_pattern = "(.)(.)")
+        tidyr::pivot_longer(
+          tidyselect::everything(),
+          names_to = c(".value", "set"),
+          names_pattern = "(.)(.)")
 
       band.length <-
-        tibble(m = c(approx.equi,add_points$m)) %>%
-        arrange(m)
+        tibble::tibble(m = c(approx.equi,add_points$m)) %>%
+        dplyr::arrange(m)
 
       if(isTRUE(cut.bands)){
         band.length <- band.length %>%
           dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
       }
 
-      band.length <- band.length %>% pull()
+      band.length <- band.length %>% dplyr::pull()
 
       p_dat <-
-        tibble(
+        tibble::tibble(
           x = band.length,
           lwr=interpolate(x=r$bands$x, y= r$bands$lwr, xout=band.length, right = 0),
           upr=interpolate(x=r$bands$x, y= r$bands$upr, xout=band.length, right = 1)
@@ -186,18 +194,18 @@ autolayer.calibrationband <-
     #if(diag!="default"){
       if(identical(cut.bands,T)){
         diag_dat <-  r$cal %>%
-          select(!range)%>%
-          rowwise() %>%
-          mutate(
+          dplyr::select(!range)%>%
+          dplyr::rowwise() %>%
+          dplyr::mutate(
             min_x = ifelse(min(r$cases$x) >= min_x & min(r$cases$x) <= max_x, min(r$cases$x), min_x),
             max_x = ifelse(max(r$cases$x) >= min_x & max(r$cases$x) <= max_x, max(r$cases$x), max_x),
             #ext = F # extended
           ) %>%
-          filter(
+          dplyr::filter(
             max_x <= max(r$cases$x) &  min_x >= min(r$cases$x)
           ) %>%
-          ungroup() %>%
-          arrange(min_x)
+          dplyr::ungroup() %>%
+          dplyr::arrange(min_x)
       } else {
         diag_dat <-  r$cal
       }
@@ -222,40 +230,6 @@ autolayer.calibrationband <-
     }
 
     # add layers
-    if (!isTRUE(is.na(p_ribbon))) {
-      layerlist <- c(
-        layerlist,
-        do.call(
-          what = ggplot2::geom_polygon,
-          args = c(
-            list(data = ribbon.dat),
-            list(mapping = ggplot2::aes(
-              x = .data$x_lwr,
-              y=.data$lwr)
-            ),
-            p_ribbon
-          )
-        )
-      )
-    }
-
-    if (!isTRUE(is.na(p_isoreg))) {
-      layerlist <- c(
-        layerlist,
-        do.call(
-          what = ggplot2::geom_line,
-          args = c(
-            list(data = tidyr::pivot_longer(
-              r$bins,
-              cols = dplyr::all_of(c("x_min", "x_max")),
-              values_to = "x")
-            ),
-            list(mapping = ggplot2::aes(
-              x = .data$x, y=.data$CEP_pav)),
-            p_isoreg
-          )))
-    }
-
     if(!isTRUE(is.na(p_diag))) {
       layerlist <- c(
         layerlist,
@@ -275,6 +249,40 @@ autolayer.calibrationband <-
         do.call(
           what = ggplot2::scale_colour_gradient,
           p_diag))
+    }
+
+    if (!isTRUE(is.na(p_isoreg))) {
+      layerlist <- c(
+        layerlist,
+        do.call(
+          what = ggplot2::geom_line,
+          args = c(
+            list(data = tidyr::pivot_longer(
+              r$bins,
+              cols = dplyr::all_of(c("x_min", "x_max")),
+              values_to = "x")
+            ),
+            list(mapping = ggplot2::aes(
+              x = .data$x, y=.data$CEP_pav)),
+            p_isoreg
+          )))
+    }
+
+    if (!isTRUE(is.na(p_ribbon))) {
+      layerlist <- c(
+        layerlist,
+        do.call(
+          what = ggplot2::geom_polygon,
+          args = c(
+            list(data = ribbon.dat),
+            list(mapping = ggplot2::aes(
+              x = .data$x_lwr,
+              y=.data$lwr)
+            ),
+            p_ribbon
+          )
+        )
+      )
     }
 
     layerlist
@@ -327,7 +335,7 @@ plot.calibrationband <- function(x, ...,
   # plot
   if (plot) {
     if (add) {
-      points(x_lwr, lwr, type = "l", col = col)
+      graphics::points(x_lwr, lwr, type = "l", col = col)
     } else {
       plot(
         x_lwr,
@@ -339,7 +347,7 @@ plot.calibrationband <- function(x, ...,
         ylab = "Conditional event probability"
       )
     }
-    points(x_upr, upr, type = "l",  col = col)
+    graphics::points(x_upr, upr, type = "l",  col = col)
   }
 
   # export

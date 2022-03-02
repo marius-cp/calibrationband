@@ -2,15 +2,30 @@
 % Please edit documentation in R/print.R
 \name{print.calibrationband}
 \alias{print.calibrationband}
+\alias{print.summary.calibrationband}
 \title{Print monotone confidence bands}
 \usage{
 \method{print}{calibrationband}(x, ...)
+
+\method{print}{summary.calibrationband}(x, ...)
 }
 \arguments{
 \item{x}{object of class calibrationband}
 
-\item{...}{further arguments to be passed to or from methods;}
+\item{...}{further arguments to be passed to or from methods;
+in particular, these are passed to \code{\link{autoplot.calibrationband}}}
+}
+\value{
+Invisibly returns \code{x}.
 }
 \description{
 Print monotone confidence bands
+}
+\details{
+\code{print.calibrationband} always sends an autoplot object to the
+current graphics device and prints a summary to the console.
+}
+\seealso{
+\code{\link{autoplot.calibrationband}},
+  \code{\link{summary.calibrationband}}
 }

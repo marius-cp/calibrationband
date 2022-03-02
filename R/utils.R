@@ -1,3 +1,11 @@
+#' @importFrom magrittr `%>%`
+#' @importFrom rlang .data
+#' @importFrom tidyselect everything
+NULL
+
+utils::globalVariables(c(".","lwr_", "m", "max_x", "min_x", "out", "segment", "upr_", "x_", "x"))
+
+
 #' Interpolation (required in isobands)
 #'
 #' @param x position on x axis.
@@ -31,7 +39,7 @@ p.dat <- function(bands){
   x_lwr <- x_[ind_1]
   x_upr <- x_[ind_2]
 
-  p.dat = tibble(
+  p.dat = tibble::tibble(
     x_lwr = x_lwr,
     x_upr = x_upr,
     upr = upr,

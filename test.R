@@ -13,7 +13,9 @@ dat <- tibble(pr=x, s=s, cep = p(pr,s), y=rbinom(n,1,cep))%>% arrange(pr)
 
 
 isoba <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3)
-summary(isoba)
+
+su <- summary(isoba)
+
 autoplot(isoba)
 
 isoba$bands
@@ -87,13 +89,13 @@ library(calibrationband)
 autoplot(isoba,approx.equi=500, cut.bands = T)
 
 autoplot(isoba,approx.equi=NULL, cut.bands = T,
+         p_isoreg = NA,
          p_ribbon = NA,
-         #p_isoreg = NA,
-         #p_diag = NA
+         p_diag = NA
          )+
   ggplot2::autolayer(isoba,cut.bands = T,
+                     p_diag = list(low = "red", high = "blue", guide = "none", limits=c(0,1)),
+                     p_isoreg = list(linetype = "dashed"),
                     p_ribbon = list(alpha = .1, fill = "red", colour = "green"),
-                    #p_isoreg = list(linetype = "dashed"),
-                     #p_diag = list(low = "red", high = "blue", guide = "none", limits=c(0,1))
                      )
 

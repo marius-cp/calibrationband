@@ -4,6 +4,9 @@
 ## usethis namespace: end
 NULL
 
+
+
+
 #' use method
 #' @param x object of class isoband
 #' @param ... further arguments to be passed to or from methods;
@@ -67,7 +70,7 @@ calibration_bands <- function(
 ) {
   # compute isotonic regression
   x_original <- x
-  ir <- isoreg(x = x, y = y)
+  ir <- stats::isoreg(x = x, y = y)
   if (!ir$isOrd) {
     x <- x[ir$ord]
     y <- y[ir$ord]
@@ -210,22 +213,22 @@ calibration_bands <- function(
   )
 
   df_cal <-
-    tibble(
+    tibble::tibble(
       x_ =  seq(0,1, length.out = 10000),
       lwr_ =interpolate(x=df_bands$x, y= df_bands$lwr, xout=x_, right = 0),
       upr_ =interpolate(x=df_bands$x, y= df_bands$upr, xout=x_, right = 1)
     ) %>%
-    mutate(
+    dplyr::mutate(
       out = ifelse(upr_ < x_ | lwr_ > x_, 1, 0),
       segment = data.table::rleid(out) # segment of calibration/miscalibration
     ) %>%
-    group_by(segment) %>%
-    summarise(
+    dplyr::group_by(segment) %>%
+    dplyr::summarise(
       out = mean(out),
       min_x = min(x_),
       max_x = max(x_)
     ) %>%
-    mutate(range = max_x-min_x)
+    dplyr::mutate(range = max_x-min_x)
 
   #head(cumsum(rle(df_cal$diag.out)$length),-1)
 

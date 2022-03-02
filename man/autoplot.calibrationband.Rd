@@ -20,9 +20,9 @@
   ...,
   approx.equi = NULL,
   cut.bands = F,
-  p_ribbon = NA,
+  p_diag = NA,
   p_isoreg = NA,
-  p_diag = NA
+  p_ribbon = NA
 )
 }
 \arguments{

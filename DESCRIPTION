@@ -1,11 +1,20 @@
 Package: calibrationband
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Calibration Bands 
 Version: 0.1.0
-Author: Timo Dimitriadis, Alexander Henzi, Marius Puke
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+    person(given = "Timo",
+           family = "Dimitriadis",
+           role = "aut"),
+    person(given = "Alexander",
+           family = "Henzi",
+           role = "aut"),
+    person(given = "Marius",
+           family = "Puke",
+           role = c("aut", "cre"),
+           email = "marius.puke@uni-hohenheim.de"))
+Description: Assessing the calibration of probabilistic classifiers. See Dimitriadis, Dümbgen, Henzi, Puke, Ziegel (2022). 
+URL: https://github.com/marius-cp/calibrationband
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -22,4 +31,7 @@ Imports:
     sp, 
     methods, 
     base, 
-    stats
+    stats, 
+    magrittr, 
+    rlang, 
+    tidyselect
