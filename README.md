@@ -36,14 +36,14 @@ print(cb)
 
 ![](man/figures/README-example-1.png)<!-- -->
 
-    #> Areas of misscalibration (ordered by length). In addition there are 3 more. 
-    #> # A tibble: 6 × 2
+    #> Areas of misscalibration (ordered by length). In addition there are 2 more. 
+    #> # A tibble: 5 × 2
     #>    min_x max_x
     #>    <dbl> <dbl>
-    #> 1 0.0344 0.300
-    #> 2 0.759  0.946
-    #> 3 0.946  0.946
-    #> # … with 3 more rows
+    #> 1 0.734  0.974
+    #> 2 0.0474 0.258
+    #> 3 0.711  0.721
+    #> # … with 2 more rows
 
     # customize autoplot using layers 
     autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = NA)+

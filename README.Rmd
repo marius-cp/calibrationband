@@ -11,10 +11,11 @@ knitr::opts_chunk$set(
 ```
 
 # calibrationbands
-<!-- badges: start -->
-[![R build status](https://github.com/marius-cp/calibrationband/workflows/R-CMD-check/badge.svg)](https://github.com/marius-cp/calibrationband/actions)
-<!-- badges: end -->
 
+<!-- badges: start -->
+  [![R build status](https://github.com/marius-cp/calibrationband/workflows/R-CMD-check/badge.svg)](https://github.com/marius-cp/calibrationband/actions)
+  <!-- badges: end -->
+  
 ## Installation
 ### Development version
 
