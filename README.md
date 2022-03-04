@@ -1,11 +1,15 @@
 
-# calibrationbands
-
 <!-- badges: start -->
 
 [![R build
 status](https://github.com/marius-cp/calibrationband/workflows/R-CMD-check/badge.svg)](https://github.com/marius-cp/calibrationband/actions)
 <!-- badges: end -->
+
+# calibrationbands
+
+An R package to assess calibration of binary outcome predictions.
+Authored by Timo Dimitriadis (Heidelberg University), Alexander Henzi
+(University of Bern), and Marius Puke (University of Hohenheim).
 
 ## Installation
 
@@ -45,14 +49,17 @@ print(cb) # prints autoplot and summary, see also autoplot(.) and summary(.)
     #> 3 0.957  0.957
     #> # … with 1 more row
 
-    # customize autoplot using layers 
-    autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = NA)+
-      ggplot2::autolayer(
-        cb,
-        cut.bands = F,
-        p_diag = list(low = "green", high = "red", guide = "none", limits=c(0,1)),
-        p_isoreg = list(linetype = "dashed"),
-        p_ribbon = list(alpha = .1, fill = "red", colour = "purple")
-                         )
+Use `ggplot2:autolayer` to customize the plot.
 
-![](man/figures/README-example-2.png)<!-- -->
+``` r
+autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = NA)+
+  ggplot2::autolayer(
+    cb,
+    cut.bands = F,
+    p_diag = list(low = "green", high = "red", guide = "none", limits=c(0,1)),
+    p_isoreg = list(linetype = "dashed"),
+    p_ribbon = list(alpha = .1, fill = "red", colour = "purple")
+                     )
+```
+
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- --> \`\`\`
