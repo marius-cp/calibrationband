@@ -31,7 +31,7 @@ devtools::install_github("marius-cp/calibrationband")
 ```{r example, warning=F, message=F}
 library(calibrationband)
 library(dplyr)
-
+set.seed(123)
 s=.8
 n=10000
 x <- runif(n)
@@ -39,7 +39,7 @@ p <- function(x,s){p = 1/(1+((1/x*(1-x))^(s+1)));return(p)}
 dat <- tibble::tibble(pr=x, s=s, cep = p(pr,s), y=rbinom(n,1,cep))%>% dplyr::arrange(pr)
 
 cb <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3)
-print(cb)
+print(cb) # prints autoplot and summary, see also autoplot(.) and summary(.)
 
 # customize autoplot using layers 
 autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = NA)+

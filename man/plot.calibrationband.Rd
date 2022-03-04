@@ -2,30 +2,71 @@
 % Please edit documentation in R/plot.R
 \name{plot.calibrationband}
 \alias{plot.calibrationband}
+\alias{autoplot.calibrationband}
+\alias{autolayer.calibrationband}
 \title{Plotting monotone confidence bands}
 \usage{
-\method{plot}{calibrationband}(x, ..., plot = FALSE, add = FALSE, col = "black")
+\method{autoplot}{calibrationband}(
+  object,
+  ...,
+  approx.equi = NULL,
+  cut.bands = F,
+  p_ribbon = NULL,
+  p_isoreg = NULL,
+  p_diag = NULL
+)
+
+\method{autolayer}{calibrationband}(
+  object,
+  ...,
+  approx.equi = NULL,
+  cut.bands = F,
+  p_diag = NA,
+  p_isoreg = NA,
+  p_ribbon = NA
+)
+
+\method{plot}{calibrationband}(x, ...)
 }
 \arguments{
-\item{x}{output of the \code{calibrationband} functions.}
+\item{object}{object of class \code{calibrationband}}
 
-\item{...}{further arguments to be passed to or from methods;}
+\item{...}{further arguments to be passed to or from methods.}
 
-\item{plot}{if \code{TRUE}, a simple plot of the confidence bands is
-displayed (default \code{FALSE}).}
+\item{approx.equi}{If \code{NULL}, the bands are drawn for each
+prediction-realization pair. If it is a scalar, say \code{z},  the bounds are
+approximated at \code{z} equidistant point on the x-axis. Also see the effect of
+\code{cut.bands} if a scalar is specified.
 
-\item{add}{if \code{TRUE}, adds the bands to an existing plot (default
-\code{FALSE}).}
+In large data sets, \code{approx.equi = NULL}  might result in
+capacity consuming plots. In these cases we recommend to set \code{approx.equi}
+ equal to a value that is at least 200.
 
-\item{col}{color of bands.}
+Note, in these cases and for  accurate illustration in transition areas
+(changes between miscalibrated and calibrated areas) we add important
+additional points the initial vector/scalar of  \code{approx.equi}.}
+
+\item{cut.bands}{Cut the bands at most extreme prediction values.
+Bands will not be extended to 0 and 1 respectively if option is set equal to true.
+Note, that has no effect if  \code{approx.equi} is a vector.}
+
+\item{p_ribbon}{If non \code{NULL}, a ribbon is drawn. Contains a list of
+arguments for \code{ggplot2::geom_polygon}.}
+
+\item{p_isoreg}{If non \code{NULL} the istonic regression curve is drawn.
+Contains a list of arguments for \code{ggplot2::geom_line}.}
+
+\item{p_diag}{If non \code{NULL}, the diagonal line is drawn.
+Contains list of arguments for \code{ggplot2::geom_segment}.}
+
+\item{x}{object of class \code{calibrationband}}
 }
 \value{
-A list containing the \code{x,y} to be called in the function \code{plot} to
-plot the confidence band, separated for the upper and lower bound (returned
-invisibly).
+An object inheriting from class \code{'ggplot'}.
 }
 \description{
-Plotting monotone confidence bands
+Using the \pkg{ggplot2} package to illustrate monotone confidence bands of
+prediction methods that issue probability forecasts.
 }
 \details{
 When plotting the monotone confidence band, the upper bound should be
@@ -34,7 +75,43 @@ interval \code{(x[i-1],x[i]]}. The lower bound should be extended to the
 right, i.e. the bound at x[i] is extended to the interval \code{[x[i],x[i +
 1])}. This function creates x and y values for correct plotting of these
 bounds.
+
+\code{autoplot} behaves like any \code{ggplot() + layer()} combination. T
+That means, customized plots should be created using \code{autoplot} and
+\code{autolayer}.
+
+Setting any of the \code{p_*} arguments to \code{NA} disables that layer.
+
+Default parameter values for \code{p_*}
+
+\tabular{ll}{
+\code{p_isoreg} \tab \code{list(color = "darkgray")} \cr
+\code{p_diag} \tab \code{list(color = "black", fill="blue", alpha = .1)} \cr
+\code{p_ribbon} \tab \code{ list(low = "gray", high = "red", guide = "none", limits=c(0,1))}
 }
-\author{
-Alexander Henzi
+}
+\examples{
+s=.8
+n=10000
+x <- sort(runif(n))
+
+p <- function(x,s){p = 1/(1+((1/x*(1-x))^(s+1)));return(p)}
+dat <- data.frame(pr=x, y=rbinom(n,1,p(x,s)))
+
+cb <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method="round", digits =3)
+
+#simple plotting
+plot(cb)
+autoplot(cb)
+
+#customize the plot using  ggplot2::autolayer
+autoplot(
+cb,
+approx.equi=NULL,
+p_ribbon = NA
+)+
+ggplot2::autolayer(
+cb,
+p_ribbon = list(alpha = .3, fill = "gray", colour = "blue"),
+)
 }

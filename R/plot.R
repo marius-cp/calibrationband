@@ -7,73 +7,88 @@ ggplot2::autoplot
 ggplot2::autolayer
 
 #' Plotting monotone confidence bands
-#' @param object object of class calibrationband
+#'
+#' Using the \pkg{ggplot2} package to illustrate monotone confidence bands of
+#' prediction methods that issue probability forecasts.
+#'
+#' @param object object of class \code{calibrationband}
+#' @param x object of class \code{calibrationband}
 #' @param approx.equi If \code{NULL}, the bands are drawn for each
 #' prediction-realization pair. If it is a scalar, say \code{z},  the bounds are
 #' approximated at \code{z} equidistant point on the x-axis. Also see the effect of
-#' \code{cut.bands} if a scalar is specified. If  \code{approx.equi} is a vector
-#' with entries \code{a_1, \dots, a_i in (0,1)}, the bounds are approximated at
-#' these particular points.
+#' \code{cut.bands} if a scalar is specified.
 #'
 #' In large data sets, \code{approx.equi = NULL}  might result in
-#' capacity consuming plots. In these cases we recommend to consider the other
-#' choices.
+#' capacity consuming plots. In these cases we recommend to set \code{approx.equi}
+#'  equal to a value that is at least 200.
+#'
 #' Note, in these cases and for  accurate illustration in transition areas
 #' (changes between miscalibrated and calibrated areas) we add important
 #' additional points the initial vector/scalar of  \code{approx.equi}.
+#'
 #' @param p_isoreg  If non \code{NULL} the istonic regression curve is drawn.
 #' Contains a list of arguments for \code{ggplot2::geom_line}.
-#' @param p_diag  If non \code{NULL}, the diagonal line is drwan.
+#' @param p_diag  If non \code{NULL}, the diagonal line is drawn.
 #' Contains list of arguments for \code{ggplot2::geom_segment}.
-#' @param p_ribbon If non \code{NULL}, a ribbon is drwan. Contains a list of
+#' @param p_ribbon If non \code{NULL}, a ribbon is drawn. Contains a list of
 #'  arguments for \code{ggplot2::geom_polygon}.
 #' @param cut.bands Cut the bands at most extreme prediction values.
 #' Bands will not be extended to 0 and 1 respectively if option is set equal to true.
 #' Note, that has no effect if  \code{approx.equi} is a vector.
-#' @param ... further arguments to be passed to or from methods;
+#' @param ... further arguments to be passed to or from methods.
+#' @return An object inheriting from class \code{'ggplot'}.
 #' @details
+#' When plotting the monotone confidence band, the upper bound should be
+#' extended to the left, that is, the bound at \code{x[i]} is valid on the
+#' interval \code{(x[i-1],x[i]]}. The lower bound should be extended to the
+#' right, i.e. the bound at x[i] is extended to the interval \code{[x[i],x[i +
+#' 1])}. This function creates x and y values for correct plotting of these
+#' bounds.
+#'
 #' \code{autoplot} behaves like any \code{ggplot() + layer()} combination. T
 #' That means, customized plots should be created using \code{autoplot} and
 #' \code{autolayer}.
 #'
 #' Setting any of the \code{p_*} arguments to \code{NA} disables that layer.
 #'
-#' Default parameter values
+#' Default parameter values for \code{p_*}
 #'
 #' \tabular{ll}{
 #' \code{p_isoreg} \tab \code{list(color = "darkgray")} \cr
 #' \code{p_diag} \tab \code{list(color = "black", fill="blue", alpha = .1)} \cr
 #' \code{p_ribbon} \tab \code{ list(low = "gray", high = "red", guide = "none", limits=c(0,1))}
 #' }
-#' @name autoplot.calibrationband
+#' @examples
+#' s=.8
+#' n=10000
+#' x <- sort(runif(n))
+#'
+#' p <- function(x,s){p = 1/(1+((1/x*(1-x))^(s+1)));return(p)}
+#' dat <- data.frame(pr=x, y=rbinom(n,1,p(x,s)))
+#'
+#' cb <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method="round", digits =3)
+#'
+#' #simple plotting
+#' plot(cb)
+#' autoplot(cb)
+#'
+#' #customize the plot using  ggplot2::autolayer
+#' autoplot(
+#' cb,
+#' approx.equi=NULL,
+#' p_ribbon = NA
+#' )+
+#' ggplot2::autolayer(
+#' cb,
+#' p_ribbon = list(alpha = .3, fill = "gray", colour = "blue"),
+#' )
+#' @name plot.calibrationband
 NULL
-# @examples
-#  s=.8
-#  n=10000
-#  x <- sort(runif(n, .05, .95))
-#
-#  p <- function(x,s){p = 1/(1+((1/x*(1-x))^(s+1)));return(p)}
-#  dat <- data.frame(pr=x, s=s, cep = p(x,s), y=rbinom(n,1,p(x,s)))
-#
-#  isoba <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3)
-#
-# autoplot(isoba)
-# autoplot(isoba,approx.equi=NULL, cut.bands = T,
-# p_ribbon = NA,
-# p_isoreg = NA,
-# p_diag = NA
-# )+
-# ggplot2::autolayer(isoba,cut.bands = T,
-# p_ribbon = list(alpha = .1, fill = "red", colour = "green"),
-# p_isoreg = list(linetype = "dashed"),
-# p_diag = list(low = "red", high = "blue", guide = "none", limits=c(0,1))
-# )
 
 
 
 
-
-#' @rdname autoplot.calibrationband
+#' @rdname plot.calibrationband
 #'
 #' @export
 autoplot.calibrationband <- function(object, ...,
@@ -103,7 +118,7 @@ autoplot.calibrationband <- function(object, ...,
 
 }
 
-#' @rdname autoplot.calibrationband
+#' @rdname plot.calibrationband
 #'
 #' @export
 
@@ -115,10 +130,20 @@ autolayer.calibrationband <-
            p_diag = NA,
            p_isoreg = NA,
            p_ribbon=NA
-
            ){
 
     r <- object
+
+    # warnings
+    if(is.vector(approx.equi)&length(approx.equi)>1){
+      warning("You choose approx.equi as vector. This option is not yet available. We continue with 'approx.equi=500' instead.", call. = FALSE)
+      approx.equi = 500
+      }
+
+    if({!is.null(approx.equi)&sum(approx.equi)<200}){ # non NULL and smaller than 200?
+      warning("You choose approx.equi as a scalar smaller than 200. We proceed with 'approx.equi=500' instead.", call. = FALSE)
+      approx.equi = NULL
+    }
 
     # construct plot data
     if(is.null(approx.equi)){
@@ -131,8 +156,6 @@ autolayer.calibrationband <-
         p_dat <- r$bands
       }
     } else if(is.vector(approx.equi)&length(approx.equi)==1){
-      # cal tibble holds information on areas of (mis)calibration
-      # use equidistant  points (700) in addition to the important areas to get nicely looking transitions
       add_points <-
         r$cal %>% dplyr::select(min_x,max_x) %>%
         tidyr::pivot_longer(
@@ -163,35 +186,34 @@ autolayer.calibrationband <-
           lwr=interpolate(x=r$bands$x, y= r$bands$lwr, xout=band.length, right = 0),
           upr=interpolate(x=r$bands$x, y= r$bands$upr, xout=band.length, right = 1)
         )
-    } else if(is.vector(approx.equi)&length(approx.equi)>1){
-      # warn here if to less entries in vector
-      add_points <-
-        r$cal %>% dplyr::select(min_x,max_x) %>%
-        tidyr::pivot_longer(
-          tidyselect::everything(),
-          names_to = c(".value", "set"),
-          names_pattern = "(.)(.)")
-
-      band.length <-
-        tibble::tibble(m = c(approx.equi,add_points$m)) %>%
-        dplyr::arrange(m)
-
-      if(isTRUE(cut.bands)){
-        band.length <- band.length %>%
-          dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
-      }
-
-      band.length <- band.length %>% dplyr::pull()
-
-      p_dat <-
-        tibble::tibble(
-          x = band.length,
-          lwr=interpolate(x=r$bands$x, y= r$bands$lwr, xout=band.length, right = 0),
-          upr=interpolate(x=r$bands$x, y= r$bands$upr, xout=band.length, right = 1)
-        )
     }
+    #else if(is.vector(approx.equi)&length(approx.equi)>1){
+      # add_points <-
+      #   r$cal %>% dplyr::select(min_x,max_x) %>%
+      #   tidyr::pivot_longer(
+      #     tidyselect::everything(),
+      #     names_to = c(".value", "set"),
+      #     names_pattern = "(.)(.)")
+      #
+      # band.length <-
+      #   tibble::tibble(m = c(approx.equi,add_points$m)) %>%
+      #   dplyr::arrange(m)
+      #
+      # if(isTRUE(cut.bands)){
+      #   band.length <- band.length %>%
+      #     dplyr::filter(m >= min(r$cases$x) & m <= max(r$cases$x))
+      # }
+      #
+      # band.length <- band.length %>% dplyr::pull()
+      #
+      # p_dat <-
+      #   tibble::tibble(
+      #     x = band.length,
+      #     lwr=interpolate(x=r$bands$x, y= r$bands$lwr, xout=band.length, right = 0),
+      #     upr=interpolate(x=r$bands$x, y= r$bands$upr, xout=band.length, right = 1)
+      #   )
+    #}
 
-    #if(diag!="default"){
       if(identical(cut.bands,T)){
         diag_dat <-  r$cal %>%
           dplyr::select(!range)%>%
@@ -209,7 +231,6 @@ autolayer.calibrationband <-
       } else {
         diag_dat <-  r$cal
       }
-   # }
 
 
     layerlist <- list()
@@ -290,66 +311,14 @@ autolayer.calibrationband <-
 
 
 
-#' Plotting monotone confidence bands
+#' @rdname plot.calibrationband
 #'
-#' @param x output of the \code{calibrationband} functions.
-#' @param ... further arguments to be passed to or from methods;
-#' @param plot if \code{TRUE}, a simple plot of the confidence bands is
-#'     displayed (default \code{FALSE}).
-#' @param add if \code{TRUE}, adds the bands to an existing plot (default
-#'     \code{FALSE}).
-#' @param col color of bands.
-#'
-#' @details
-#' When plotting the monotone confidence band, the upper bound should be
-#' extended to the left, that is, the bound at \code{x[i]} is valid on the
-#' interval \code{(x[i-1],x[i]]}. The lower bound should be extended to the
-#' right, i.e. the bound at x[i] is extended to the interval \code{[x[i],x[i +
-#' 1])}. This function creates x and y values for correct plotting of these
-#' bounds.
-#'
-#' @return
-#' A list containing the \code{x,y} to be called in the function \code{plot} to
-#' plot the confidence band, separated for the upper and lower bound (returned
-#' invisibly).
-#'
-#' @author
-#' Alexander Henzi
 #' @export
 
-plot.calibrationband <- function(x, ...,
-                                 plot = FALSE, add = FALSE, col = "black") {
-  x_ <- x$bands$x
-  upr <- x$bands$upr
-  lwr <- x$bands$lwr
-
-  m <- length(x_)
-  ind_1 <- c(1, rep(2:m, each = 2))
-  ind_2 <- c(rep(seq_len(m - 1), each = 2), m)
-  upr <- upr[ind_1]
-  lwr <- lwr[ind_2]
-
-  x_lwr <- x_[ind_1]
-  x_upr <- x_[ind_2]
-
-  # plot
-  if (plot) {
-    if (add) {
-      graphics::points(x_lwr, lwr, type = "l", col = col)
-    } else {
-      plot(
-        x_lwr,
-        lwr,
-        type = "l",
-        col = col,
-        ylim = c(0, 1),
-        xlab = "Predicted probability",
-        ylab = "Conditional event probability"
-      )
-    }
-    graphics::points(x_upr, upr, type = "l",  col = col)
-  }
-
-  # export
-  invisible(list(x_lwr = x_lwr, x_upr = x_upr, lwr = lwr, upr = upr))
+plot.calibrationband <- function(x, ...) {
+  p <- autoplot(
+    x,
+    ...
+    )
+  print(p)
 }

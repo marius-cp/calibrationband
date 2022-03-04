@@ -23,7 +23,7 @@ devtools::install_github("marius-cp/calibrationband")
 ``` r
 library(calibrationband)
 library(dplyr)
-
+set.seed(123)
 s=.8
 n=10000
 x <- runif(n)
@@ -31,19 +31,19 @@ p <- function(x,s){p = 1/(1+((1/x*(1-x))^(s+1)));return(p)}
 dat <- tibble::tibble(pr=x, s=s, cep = p(pr,s), y=rbinom(n,1,cep))%>% dplyr::arrange(pr)
 
 cb <- calibration_bands(x=dat$pr, y=dat$y,alpha=0.05, method = "round", digits = 3)
-print(cb)
+print(cb) # prints autoplot and summary, see also autoplot(.) and summary(.)
 ```
 
 ![](man/figures/README-example-1.png)<!-- -->
 
-    #> Areas of misscalibration (ordered by length). In addition there are 2 more. 
-    #> # A tibble: 5 × 2
+    #> Areas of misscalibration (ordered by length). In addition there are 1 more. 
+    #> # A tibble: 4 × 2
     #>    min_x max_x
     #>    <dbl> <dbl>
-    #> 1 0.734  0.974
-    #> 2 0.0474 0.258
-    #> 3 0.711  0.721
-    #> # … with 2 more rows
+    #> 1 0.0396 0.299
+    #> 2 0.693  0.951
+    #> 3 0.957  0.957
+    #> # … with 1 more row
 
     # customize autoplot using layers 
     autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = NA)+

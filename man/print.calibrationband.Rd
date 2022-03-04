@@ -3,23 +3,29 @@
 \name{print.calibrationband}
 \alias{print.calibrationband}
 \alias{print.summary.calibrationband}
-\title{Print monotone confidence bands}
+\title{Print monotone confidence bands
+Printing methods for \code{'calibrationband'} and
+\code{'summary.calibrationband'} objects.}
 \usage{
 \method{print}{calibrationband}(x, ...)
 
-\method{print}{summary.calibrationband}(x, ...)
+\method{print}{summary.calibrationband}(x, ..., n = 3)
 }
 \arguments{
-\item{x}{object of class calibrationband}
+\item{x}{object of class \code{calibrationband}}
 
 \item{...}{further arguments to be passed to or from methods;
 in particular, these are passed to \code{\link{autoplot.calibrationband}}}
+
+\item{n}{number of areas of miscalibration printed.}
 }
 \value{
 Invisibly returns \code{x}.
 }
 \description{
 Print monotone confidence bands
+Printing methods for \code{'calibrationband'} and
+\code{'summary.calibrationband'} objects.
 }
 \details{
 \code{print.calibrationband} always sends an autoplot object to the

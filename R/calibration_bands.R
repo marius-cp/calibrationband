@@ -6,16 +6,6 @@ NULL
 
 
 
-
-#' use method
-#' @param x object of class isoband
-#' @param ... further arguments to be passed to or from methods;
-#' @rdname as.calibrationband
-#' @export
-as.calibrationband <- function(x, ...) {
-  UseMethod("as.calibrationband")
-}
-
 #' Confidence bands for monotone probabilities
 #'
 #' @param x covariate.

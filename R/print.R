@@ -1,7 +1,11 @@
 #' Print monotone confidence bands
-#' @param x object of class calibrationband
+#' Printing methods for \code{'calibrationband'} and
+#' \code{'summary.calibrationband'} objects.
+#'
+#' @param x object of class \code{calibrationband}
 #' @param ... further arguments to be passed to or from methods;
 #' in particular, these are passed to \code{\link{autoplot.calibrationband}}
+#' @param n number of areas of miscalibration printed.
 #'
 #' @details
 #' \code{print.calibrationband} always sends an autoplot object to the
@@ -31,17 +35,17 @@ print.calibrationband <- function(x, ...) {
 #'
 #' @export
 
-print.summary.calibrationband <- function(x, ...){
+print.summary.calibrationband <- function(x, ..., n=3){
 
   spx <- x
   class(spx) <- class(x)[-1]
 
   if(identical(nrow(spx), 0L)){
     st <- sprintf("Calibration band captures bisector for all x.\n")
-  } else if(nrow(spx)>=1 & nrow(spx)<=3){
+  } else if(nrow(spx)>=1 & nrow(spx)<=n){
     st <- sprintf("Areas of misscalibration (ordered by length).\n")
   } else {
-    st <- sprintf("Areas of misscalibration (ordered by length). In addition there are %i more. \n", nrow(spx)-3)
+    st <- sprintf("Areas of misscalibration (ordered by length). In addition there are %i more. \n", nrow(spx)-n)
   }
 
 
@@ -49,7 +53,7 @@ print.summary.calibrationband <- function(x, ...){
 
   if(identical(nrow(spx), 0L)){ }
   else {
-    print(spx, n=3)
+    print(spx, n=n)
   }
 
   invisible(x)
