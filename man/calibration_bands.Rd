@@ -33,34 +33,27 @@ Has no effect for the other methods.}
 \code{FALSE}.}
 }
 \value{
-An object of class \code{isoband}, which is a list containing
+An object of class \code{calibrationband}, which is a list containing the following entries
 
-\item{\code{x_original,y_original}}{the \code{x} and \code{y} supplied for
-    computing the confidence band.}
-
-\item{\code{alpha}}{the given type one error probability (1 minus the nominal
-    coverage of the band).}
-
-\item{\code{method}}{the selected method for computing the band.}
-
-\item{\code{nc}}{the selected method for non-crossing.}
-
-\item{\code{digits}}{the given digits for method \code{"round"}
-    (or \code{NULL} for method \code{"standard"}).}
-
-\item{\code{x}}{the position on the x-axis of the lower and upper bound (see
-    last item).}
-
-\item{\code{isoy}}{isotonic regression of \code{y} at points \code{x}.}
-
-\item{\code{lwr,upr}}{the lower and upper bound, for each value of \code{x}.
-    The upper bound extends to the left and the lower bound to the right,
-    that is, the upper bound for \code{x[i]<s<x[i+1]} is \code{upr[i+1]},
-    and the lower bound for \code{x[i]<s<x[i+1]} is \code{lwr[i]}.}
+\tabular{ll}{
+ \code{bands} \tab a tibble holding \code{x,lwr,upr} the lower and upper bound,
+ for each value of \code{x}.
+ The upper bound extends to the left and the lower bound to the right,
+ that is, the upper bound for \code{x[i]<s<x[i+1]} is \code{upr[i+1]},
+ and the lower bound for \code{x[i]<s<x[i+1]} is \code{lwr[i]}.\cr
+ \code{cal} \tab a tibble holding the areas/segments of calibration (\code{out=0}) and miscalibration (\code{out=1}).  \cr
+ \code{bins} \tab a tibble of the characteristics of the recalibrated  bins. \cr
+ \code{cases} \tab tibble of all predictions and observations.
+ In addition it holds the column \code{isoy}, which is the isotonic
+ regression of \code{y} at points \code{x}.   \cr
+ \code{alpha} \tab the given type one error probability (1 minus the nominal
+ coverage of the band). \cr
+ \code{method} \tab the selected method for computing the band. \cr
+\code{nc} \tab the selected method for non-crossing.\cr
+\code{digits} \tab the given digits for method \code{"round"}
+    (or \code{NULL} for method \code{"standard"}).
+}
 }
 \description{
 Confidence bands for monotone probabilities
-}
-\author{
-Alexander Henzi
 }

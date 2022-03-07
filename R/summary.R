@@ -1,13 +1,13 @@
 #' summarize calibration band  object
 #'
 #' An object of class \code{calibrationband} contains the calibration band
-#' coordinates, the pairs of original observation and  forecast values,
-#' and the recalibrated forecasts given by isotonic regression.
+#' coordinates, the pairs of original observation and forecast values,
+#' and the recalibrated forecasts obtained by isotonic regression.
 #' The function \code{summary.reliabilitydiag} calculates the areas of
 #' miscalibration.
 #'
 #' @param object object of class \code{calibrationband}
-#' @param ... further arguments to be passed to or from methods.
+#' @param ... Further arguments to be passed to or from methods.
 #'
 #' @return
 #'

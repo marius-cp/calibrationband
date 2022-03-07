@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{object of class \code{calibrationband}}
 
-\item{...}{further arguments to be passed to or from methods.}
+\item{...}{Further arguments to be passed to or from methods.}
 }
 \value{
 A \code{'summary.reliability'} object, which is also a
@@ -21,8 +21,8 @@ max_x \tab maximal x-coordinate of  misscalibration segment (ordered by length).
 }
 \description{
 An object of class \code{calibrationband} contains the calibration band
-coordinates, the pairs of original observation and  forecast values,
-and the recalibrated forecasts given by isotonic regression.
+coordinates, the pairs of original observation and forecast values,
+and the recalibrated forecasts obtained by isotonic regression.
 The function \code{summary.reliabilitydiag} calculates the areas of
 miscalibration.
 }

@@ -3,8 +3,8 @@
 #' \code{'summary.calibrationband'} objects.
 #'
 #' @param x object of class \code{calibrationband}
-#' @param ... further arguments to be passed to or from methods;
-#' in particular, these are passed to \code{\link{autoplot.calibrationband}}
+#' @param ... Further arguments to be passed to or from methods;
+#' in particular these passed to \code{\link{autoplot.calibrationband}}
 #' @param n number of areas of miscalibration printed.
 #'
 #' @details

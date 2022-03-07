@@ -31,7 +31,7 @@
 \arguments{
 \item{object}{object of class \code{calibrationband}}
 
-\item{...}{further arguments to be passed to or from methods.}
+\item{...}{Further arguments to be passed to or from methods.}
 
 \item{approx.equi}{If \code{NULL}, the bands are drawn for each
 prediction-realization pair. If it is a scalar, say \code{z},  the bounds are
@@ -39,22 +39,21 @@ approximated at \code{z} equidistant point on the x-axis. Also see the effect of
 \code{cut.bands} if a scalar is specified.
 
 In large data sets, \code{approx.equi = NULL}  might result in
-capacity consuming plots. In these cases we recommend to set \code{approx.equi}
+capacity-consuming plots. In these cases, we recommend to set \code{approx.equi}
  equal to a value that is at least 200.
 
-Note, in these cases and for  accurate illustration in transition areas
-(changes between miscalibrated and calibrated areas) we add important
-additional points the initial vector/scalar of  \code{approx.equi}.}
+Note, we add important additional points the initial scalar of
+\code{approx.equi} to assure accurate transition areas (changes between
+miscalibrated and calibrated areas).}
 
 \item{cut.bands}{Cut the bands at most extreme prediction values.
-Bands will not be extended to 0 and 1 respectively if option is set equal to true.
-Note, that has no effect if  \code{approx.equi} is a vector.}
+Bands will not be extended to 0 and 1 respectively if option is set equal to true.}
 
 \item{p_ribbon}{If non \code{NULL}, a ribbon is drawn. Contains a list of
-arguments for \code{ggplot2::geom_polygon}.}
+arguments for \code{ggplot2::geom_polygon}. See details for default list settings.}
 
-\item{p_isoreg}{If non \code{NULL} the istonic regression curve is drawn.
-Contains a list of arguments for \code{ggplot2::geom_line}.}
+\item{p_isoreg}{If non \code{NULL} the isotonic regression curve is drawn.
+Contains a list of arguments for \code{ggplot2::geom_line}. See details for default list settings.}
 
 \item{p_diag}{If non \code{NULL}, the diagonal line is drawn.
 Contains list of arguments for \code{ggplot2::geom_segment}.}
@@ -65,7 +64,7 @@ Contains list of arguments for \code{ggplot2::geom_segment}.}
 An object inheriting from class \code{'ggplot'}.
 }
 \description{
-Using the \pkg{ggplot2} package to illustrate monotone confidence bands of
+Uses the \pkg{ggplot2} package to illustrate monotone confidence bands to assess calibration of
 prediction methods that issue probability forecasts.
 }
 \details{
@@ -76,7 +75,7 @@ right, i.e. the bound at x[i] is extended to the interval \code{[x[i],x[i +
 1])}. This function creates x and y values for correct plotting of these
 bounds.
 
-\code{autoplot} behaves like any \code{ggplot() + layer()} combination. T
+\code{autoplot} behaves like any \code{ggplot() + layer()} combination.
 That means, customized plots should be created using \code{autoplot} and
 \code{autolayer}.
 
