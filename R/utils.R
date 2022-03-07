@@ -6,7 +6,7 @@ NULL
 utils::globalVariables(c(".","lwr_", "m", "max_x", "min_x", "out", "segment", "upr_", "x_", "x"))
 
 
-#' Interpolation (required in isobands)
+#' Interpolation (required in calibrationband)
 #'
 #' @param x position on x axis.
 #' @param y position on y axis.
@@ -15,6 +15,7 @@ utils::globalVariables(c(".","lwr_", "m", "max_x", "min_x", "out", "segment", "u
 #'     x[i] < xout <= x[i+1] is y[i+1], if \code{0} it is y[i].
 #'
 #' @importFrom stats approx
+#' @noRd
 interpolate <- function(x, y, xout, right = 1) {
   stats::approx(x = x, y = y, xout = xout, f = right, method = "constant")$y
 }
@@ -22,7 +23,8 @@ interpolate <- function(x, y, xout, right = 1) {
 
 #' Plot data for bands (assures correct connecting point)
 #' @param bands object bands from calibration_band function
-#'
+#' @noRd
+
 
 p.dat <- function(bands){
   r <- bands
@@ -53,16 +55,17 @@ p.dat <- function(bands){
 
 
 
-#' creats ploygon for ribbon
+#' creates polygon (ribbon)
 #' @param p.dat output of function p.dat above.
 #' @importFrom sp SpatialLines Lines Line  coordinates
 #' @importFrom methods as
+#' @noRd
 
 ribbon <- function(p.dat){
   # Create line segments to close gaps between the lines
   ## Note: It is necessary that both line segments include the meeting points
-  close_line1 <- c(min(p.dat$lwr), min(p.dat$upr))  #c(seq(min(p.dat$lwr), min(p.dat$upr), 0.0001), min(p.dat$upr))
-  close_line2 <-  c(max(p.dat$lwr), max(p.dat$upr)) #c(seq(max(p.dat$lwr), max(p.dat$upr), 0.0001), max(p.dat$upr))
+  close_line1 <- c(min(p.dat$lwr), min(p.dat$upr))
+  close_line2 <-  c(max(p.dat$lwr), max(p.dat$upr))
   closer_lower <- cbind(rep(min(p.dat$x_lwr), length(close_line1)),
                         rep(min(p.dat$x_lwr), length(close_line1)),
                         close_line1,
@@ -77,7 +80,7 @@ ribbon <- function(p.dat){
   # Merge closing segments with p.data frame
   p.dat <- rbind(closer_lower, p.dat, closer_upper)
 
-  # Create spetial line segments for the lower and upper border
+  # Create spatial line segments for the lower and upper border
   line1 <- sp::SpatialLines(list(sp::Lines(sp::Line(p.dat[, c(1,4)]), ID='a')))
   line2 <- sp::SpatialLines(list(sp::Lines(sp::Line(p.dat[, c(2,3)]), ID='b')))
 
