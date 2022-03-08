@@ -205,8 +205,8 @@ calibration_bands <- function(
     ) %>%
     dplyr::mutate(
       out = ifelse(upr_ < x_ | lwr_ > x_, 1, 0),
-      segment = data.table::rleid(out) # segment of calibration/miscalibration
-    ) %>%
+      segment = with(rle(out), rep(seq_along(lengths), times = lengths)) # segment of calibration/miscalibration
+      ) %>%
     dplyr::group_by(segment) %>%
     dplyr::summarise(
       out = mean(out),
@@ -214,8 +214,6 @@ calibration_bands <- function(
       max_x = max(x_)
     ) %>%
     dplyr::mutate(range = max_x-min_x)
-
-  #head(cumsum(rle(df_cal$diag.out)$length),-1)
 
   out <- list(
     bands=df_bands,

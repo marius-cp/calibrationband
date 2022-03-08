@@ -1,4 +1,5 @@
 #' Print monotone confidence bands
+#'
 #' Printing methods for \code{'calibrationband'} and
 #' \code{'summary.calibrationband'} objects.
 #'

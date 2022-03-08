@@ -3,9 +3,7 @@
 \name{print.calibrationband}
 \alias{print.calibrationband}
 \alias{print.summary.calibrationband}
-\title{Print monotone confidence bands
-Printing methods for \code{'calibrationband'} and
-\code{'summary.calibrationband'} objects.}
+\title{Print monotone confidence bands}
 \usage{
 \method{print}{calibrationband}(x, ...)
 
@@ -23,7 +21,6 @@ in particular these passed to \code{\link{autoplot.calibrationband}}}
 Invisibly returns \code{x}.
 }
 \description{
-Print monotone confidence bands
 Printing methods for \code{'calibrationband'} and
 \code{'summary.calibrationband'} objects.
 }

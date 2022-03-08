@@ -1,0 +1,18 @@
+citHeader("To cite calibrationband in publications use:")
+
+citEntry(
+  entry    = "Unpublished",
+  title    = "Honest calibration assessment for binary outcome predictions",
+  author   = c(person("Timo", "Dimitriadis"),
+                person("Lutz", "Dümbgen"),
+                person("Alexander", "Henzi"),
+                person("Marius", "Puke"),
+                person("Johanna", "Ziegel")),
+  year     = "2022" ,
+  note = "arXiv:tbc",
+
+  textVersion  =
+  paste("T. Dimitriadis, L. Dümbgen, A. Henzi, M. Puke, J. Ziegel (2022).",
+  "Honest calibration assessment for binary outcome predictions.",
+  "Preprint available via arXiv:tbc.")
+)

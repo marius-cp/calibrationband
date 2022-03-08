@@ -107,7 +107,7 @@ autoplot.calibrationband <- function(object, ...,
                               p_ribbon=p_ribbon
                               )+
     ggplot2::xlab("Predicted probability")+
-    ggplot2::ylab("Calibration Curve")+
+    ggplot2::ylab("Calibration curve")+
     ggplot2::theme_bw()+
     ggplot2::xlim(c(0,1))+
     ggplot2::ylim(c(0,1))+
