@@ -9,10 +9,11 @@ citEntry(
                 person("Marius", "Puke"),
                 person("Johanna", "Ziegel")),
   year     = "2022" ,
-  note = "arXiv:tbc",
+  note = "arXiv:2203.04065",
+  url = "https://doi.org/10.48550/arXiv.2203.04065",
 
   textVersion  =
   paste("T. Dimitriadis, L. Dümbgen, A. Henzi, M. Puke, J. Ziegel (2022).",
   "Honest calibration assessment for binary outcome predictions.",
-  "Preprint available via arXiv:tbc.")
+  "Preprint available via arXiv:2203.04065.", "DOI https://doi.org/10.48550/arXiv.2203.04065")
 )
