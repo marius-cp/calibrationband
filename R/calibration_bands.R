@@ -40,7 +40,8 @@ NULL
 #'  \code{method} \tab the selected method for computing the band. \cr
 #' \code{nc} \tab the selected method for non-crossing.\cr
 #' \code{digits} \tab the given digits for method \code{"round"}
-#'     (or \code{NULL} for method \code{"standard"}).
+#'     (or \code{NULL} for method \code{"standard"}).\cr
+#'  \code{time} \tab time to compute the upper and lower band.
 #' }
 #'
 #'
@@ -82,9 +83,13 @@ calibration_bands <- function(
     # so that these constants only need to be computed once
     cc <- sqrt(log((N^2 + N) / alpha) / 2 / seq_len(n))
 
+    time_ <- Sys.time()
     # compute bands
     lwr <- lower_bound(isoy, cc, part_lwr, ind_to_block)
     upr <- upper_bound(isoy, cc, part_upr, ind_to_block)
+
+    time <- Sys.time() - time_
+
 
     # remove duplicates
     jumps_lwr <- which(x[-n] < x[-1])
@@ -100,8 +105,11 @@ calibration_bands <- function(
     ys <- sapply(ys, sum)
 
     if (identical(method, "standard")) {
+      time_ <- Sys.time()
       lwr <- cp_lower_bound(ys = ys, ns = ns, alpha = alpha)
       upr <- cp_upper_bound(ys = ys, ns = ns, alpha = alpha)
+      time <- Sys.time() - time_
+
 
       # non-crossing variant
       if (isTRUE(nc)) {
@@ -123,7 +131,6 @@ calibration_bands <- function(
       ns_upr <- tapply(ns, x_upr, sum)
       x_upr <- tapply(x_round, x_upr, min)
       x_upr <- sort(unique(x_upr))
-      upr <- cp_upper_bound(ys_upr, ns_upr, alpha)
 
       # compute lower bound
       x_lwr <- ceiling(x_round * d10) / d10
@@ -131,7 +138,12 @@ calibration_bands <- function(
       ns_lwr <- tapply(ns, x_lwr, sum)
       x_lwr <- tapply(x_round, x_lwr, max)
       x_lwr <- sort(unique(x_lwr))
+
+      time_ <- Sys.time()
+      upr <- cp_upper_bound(ys_upr, ns_upr, alpha)
       lwr <- cp_lower_bound(ys_lwr, ns_lwr, alpha)
+      time <- Sys.time() - time_
+
 
       # merge the x values for upper and lower bound
       x_round <- sort(unique(c(x_upr, x_lwr)))
@@ -225,7 +237,8 @@ calibration_bands <- function(
     alpha = alpha,
     method = method,
     digits = digits,
-    nc = nc
+    nc = nc,
+    time = time
   )
 
   structure(out, class = "calibrationband")

@@ -51,7 +51,8 @@ An object of class \code{calibrationband}, which is a list containing the follow
  \code{method} \tab the selected method for computing the band. \cr
 \code{nc} \tab the selected method for non-crossing.\cr
 \code{digits} \tab the given digits for method \code{"round"}
-    (or \code{NULL} for method \code{"standard"}).
+    (or \code{NULL} for method \code{"standard"}).\cr
+ \code{time} \tab time to compute the upper and lower band.
 }
 }
 \description{
