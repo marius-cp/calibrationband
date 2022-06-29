@@ -121,6 +121,7 @@ calibration_bands <- function(
       x_upr <- floor(x_round * d10) / d10
       ys_upr <- tapply(ys, x_upr, sum)
       ns_upr <- tapply(ns, x_upr, sum)
+      x_upr <- tapply(x_round, x_upr, min)
       x_upr <- sort(unique(x_upr))
       upr <- cp_upper_bound(ys_upr, ns_upr, alpha)
 
@@ -128,6 +129,7 @@ calibration_bands <- function(
       x_lwr <- ceiling(x_round * d10) / d10
       ys_lwr <- tapply(ys, x_lwr, sum)
       ns_lwr <- tapply(ns, x_lwr, sum)
+      x_lwr <- tapply(x_round, x_lwr, max)
       x_lwr <- sort(unique(x_lwr))
       lwr <- cp_lower_bound(ys_lwr, ns_lwr, alpha)
 
