@@ -21,8 +21,7 @@ calibration_bands(
 \item{alpha}{type one error probability (1 minus the confidence level).}
 
 \item{method}{\code{"standard"} for the original method proposed in the
-article, \code{"nc"} for the non-crossing variant, \code{"round"} for
-rounding the covariate, or \code{"YB"} for the bounds by Yang & Barber
+article, \code{"round"} for rounding the covariate, or \code{"YB"} for the bounds by Yang & Barber
 (2019).}
 
 \item{digits}{number of digits for method \code{"round"}. Default is 2.

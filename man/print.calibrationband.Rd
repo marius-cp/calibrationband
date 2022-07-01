@@ -7,15 +7,13 @@
 \usage{
 \method{print}{calibrationband}(x, ...)
 
-\method{print}{summary.calibrationband}(x, ..., n = 3)
+\method{print}{summary.calibrationband}(x, ...)
 }
 \arguments{
 \item{x}{object of class \code{calibrationband}}
 
 \item{...}{Further arguments to be passed to or from methods;
 in particular these passed to \code{\link{autoplot.calibrationband}}}
-
-\item{n}{number of areas of miscalibration printed.}
 }
 \value{
 Invisibly returns \code{x}.

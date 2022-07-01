@@ -7,6 +7,8 @@
 #' miscalibration.
 #'
 #' @param object object of class \code{calibrationband}
+#' @param iso_test with \code{default = FALSE}. If \code{TRUE}, the decision of the isotonicity test is reported along side the crossings of the band. If the \code{calibrationband} is calculated with \code{nc=TRUE}, the bands are re-estimated with \code{nc=FALSE} using \code{digits=3}. The \code{alpha} from the \code{calibrationband} is used.
+#' @param n number of rows in output table.
 #' @param ... Further arguments to be passed to or from methods.
 #'
 #' @return
@@ -34,14 +36,37 @@
 #'
 #' @export
 
-summary.calibrationband <- function(object, ...){
+summary.calibrationband <- function(object, ..., iso_test = FALSE, n=3){
 
-  sr <- object$cal  %>%
-    dplyr::filter(out==1) %>%
-    dplyr::arrange(dplyr::desc(range)) %>%
-    dplyr::select(min_x,max_x)
+  #sr <- object$cal  %>%
+   # dplyr::filter(out==1) %>%
+    #dplyr::arrange(dplyr::desc(range))# %>%
+    #dplyr::select(min_x,max_x)
+
+  if(isFALSE(iso_test)){
+    crosscheck <- NULL
+  } else if(isTRUE(iso_test)){
+    crosscheck <- checkcrossings(object) %>%
+      dplyr::filter(cross==1) %>%
+      dplyr::arrange(dplyr::desc(range)) %>%
+      dplyr::mutate(id = "crossings")
+  }
+
+  sr <-
+  dplyr::bind_rows(
+    crosscheck,
+    object$cal  %>%
+      dplyr::filter(out==1) %>%
+      dplyr::arrange(dplyr::desc(range)) %>%
+      dplyr::mutate(id = "miscalibration"),
+  ) %>%
+    dplyr::mutate(
+      iso_test = iso_test,
+      n = n
+    )
 
   class(sr) <- c("summary.calibrationband", class(sr))
   return(sr)
-
 }
+
+

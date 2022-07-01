@@ -12,8 +12,7 @@ NULL
 #' @param y response variable (in {0,1}).
 #' @param alpha type one error probability (1 minus the confidence level).
 #' @param method \code{"standard"} for the original method proposed in the
-#'     article, \code{"nc"} for the non-crossing variant, \code{"round"} for
-#'     rounding the covariate, or \code{"YB"} for the bounds by Yang & Barber
+#'     article, \code{"round"} for rounding the covariate, or \code{"YB"} for the bounds by Yang & Barber
 #'     (2019).
 #' @param digits number of digits for method \code{"round"}. Default is 2.
 #'     Has no effect for the other methods.

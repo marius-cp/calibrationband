@@ -4,12 +4,16 @@
 \alias{summary.calibrationband}
 \title{summarize calibration band  object}
 \usage{
-\method{summary}{calibrationband}(object, ...)
+\method{summary}{calibrationband}(object, ..., iso_test = FALSE, n = 3)
 }
 \arguments{
 \item{object}{object of class \code{calibrationband}}
 
 \item{...}{Further arguments to be passed to or from methods.}
+
+\item{iso_test}{with \code{default = FALSE}. If \code{TRUE}, the decision of the isotonicity test is reported along side the crossings of the band. If the \code{calibrationband} is calculated with \code{nc=TRUE}, the bands are re-estimated with \code{nc=FALSE} using \code{digits=3}. The \code{alpha} from the \code{calibrationband} is used.}
+
+\item{n}{number of rows in output table.}
 }
 \value{
 A \code{'summary.reliability'} object, which is also a

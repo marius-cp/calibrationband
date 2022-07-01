@@ -3,7 +3,7 @@
 #' @importFrom tidyselect everything
 NULL
 
-utils::globalVariables(c(".","lwr_", "m", "max_x", "min_x", "out", "segment", "upr_", "x_", "x"))
+utils::globalVariables(c(".","lwr_", "m", "max_x", "min_x", "out", "segment", "upr_", "x_", "x", "upr", "lwr", "cross", "id", "n"))
 
 
 #' Interpolation (required in calibrationband)
@@ -107,3 +107,51 @@ ribbon <- function(p.dat){
 
 }
 
+#' check crossings
+#'
+#' @param object of class calibrationband
+#'
+#' @noRd
+
+checkcrossings <- function(object){
+  if(isFALSE(object$nc)){
+    crossings <-
+      object$bands %>%
+      dplyr::mutate(
+        cross = as.numeric(lwr>upr),
+        segment = with(rle(cross), rep(seq_along(lengths), times = lengths))# segment of crossings
+      ) %>%
+      dplyr::group_by(segment) %>%
+      dplyr::summarise(
+        cross = mean(cross),
+        min_x = min(x),
+        max_x = max(x)
+      ) %>%
+      dplyr::mutate(range = max_x-min_x)
+  } else {
+
+    reest <- calibration_bands(
+      x=object$cases$x,
+      y=object$cases$y,
+      alpha=object$alpha,
+      method = "round",
+      digits = 3,
+      nc =FALSE
+    )
+
+    crossings <-
+      reest$bands %>%
+      dplyr::mutate(
+        cross = as.numeric(lwr>upr),
+        segment = with(rle(cross), rep(seq_along(lengths), times = lengths))# segment of crossings
+      ) %>%
+      dplyr::group_by(segment) %>%
+      dplyr::summarise(
+        cross = mean(cross),
+        min_x = min(x),
+        max_x = max(x)
+      ) %>%
+      dplyr::mutate(range = max_x-min_x)
+  }
+  return(crossings)
+}
