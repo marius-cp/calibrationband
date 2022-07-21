@@ -26,7 +26,7 @@ NULL
 #' @export
 
 print.calibrationband <- function(x, ...) {
-  print(autoplot(x, ...,approx.equi=500, cut.bands = F))
+  print(autoplot(x, ...,approx.equi=500, cut.bands = FALSE))
   print(summary(x, ...))
   invisible(x)
 }

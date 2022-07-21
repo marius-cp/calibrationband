@@ -92,7 +92,7 @@ NULL
 #' @export
 autoplot.calibrationband <- function(object, ...,
                                      approx.equi=NULL,
-                                     cut.bands=F,
+                                     cut.bands=FALSE,
                                      p_ribbon = NULL,
                                      p_isoreg = NULL,
                                      p_diag = NULL){
@@ -124,7 +124,7 @@ autoplot.calibrationband <- function(object, ...,
 autolayer.calibrationband <-
   function(object, ...,
            approx.equi=NULL,
-           cut.bands=F,
+           cut.bands=FALSE,
            p_diag = NA,
            p_isoreg = NA,
            p_ribbon=NA
@@ -169,8 +169,8 @@ autolayer.calibrationband <-
 
       band.length <-
         c(seq(
-          from=ifelse(identical(cut.bands,T), min(r$cases$x),0),
-          to=ifelse(identical(cut.bands,T), max(r$cases$x),1),
+          from=ifelse(identical(cut.bands,TRUE), min(r$cases$x),0),
+          to=ifelse(identical(cut.bands,TRUE), max(r$cases$x),1),
           length.out = approx.equi
         ),
         add_points$m
@@ -212,7 +212,7 @@ autolayer.calibrationband <-
       #   )
     #}
 
-      if(identical(cut.bands,T)){
+      if(identical(cut.bands,TRUE)){
         diag_dat <-  r$cal %>%
           dplyr::select(!range)%>%
           dplyr::rowwise() %>%

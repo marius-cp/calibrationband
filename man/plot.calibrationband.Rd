@@ -10,7 +10,7 @@
   object,
   ...,
   approx.equi = NULL,
-  cut.bands = F,
+  cut.bands = FALSE,
   p_ribbon = NULL,
   p_isoreg = NULL,
   p_diag = NULL
@@ -20,7 +20,7 @@
   object,
   ...,
   approx.equi = NULL,
-  cut.bands = F,
+  cut.bands = FALSE,
   p_diag = NA,
   p_isoreg = NA,
   p_ribbon = NA
