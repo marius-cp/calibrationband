@@ -42,6 +42,7 @@ print.summary.calibrationband <- function(x, ...){
   class(spx) <- class(x)[-1]
 
   iso_test <- spx$iso_test %>% unique()
+  al <- spx$alpha %>% unique()
   n <- spx$n %>% unique()
 
 
@@ -80,9 +81,9 @@ print.summary.calibrationband <- function(x, ...){
       dplyr::select(min_x,max_x)
 
     if(identical(nrow(it), 0L)){
-      st <- sprintf("\n No crossings. Thus, no evidence to reject the null of an isotonic calibration curve \n")
+      st <- sprintf("\n No crossings. Thus, no evidence to reject the null of an isotonic calibration curve. The significance level is %.3f. \n", as.numeric(al))
     } else {
-      st <- sprintf("\n Crossing in the ranges below. Reject the null of an isotonic calibration curve.\n")
+      st <- sprintf("\n Crossing in the ranges below. Reject the null of an isotonic calibration curve. The significance level is %.3f.  \n", as.numeric(al))
 
     }
 

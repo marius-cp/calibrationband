@@ -62,7 +62,8 @@ summary.calibrationband <- function(object, ..., iso_test = FALSE, n=3){
   ) %>%
     dplyr::mutate(
       iso_test = iso_test,
-      n = n
+      n = n,
+      alpha = object$alpha
     )
 
   class(sr) <- c("summary.calibrationband", class(sr))

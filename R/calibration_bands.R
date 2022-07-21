@@ -18,10 +18,11 @@ NULL
 #'     Has no effect for the other methods.
 #' @param nc use non-crossing bands for method \code{"standard"} or
 #'     \code{"round"}. Has no effect for method \code{"YB"}. Default is
-#'     \code{FALSE}.
+#'     \code{FALSE}. See also \code{"summary(...,iso_test=TRUE)"} in this context.
+#'     Crossings allow to reject the null hypothesis of monotonicity in the calibration curve.
 #'
 #' @return
-#' An object of class \code{calibrationband}, which is a list containing the following entries
+#' An object of class \code{calibrationband}, which is a list containing the following entries:
 #'
 #' \tabular{ll}{
 #'  \code{bands} \tab a tibble holding \code{x,lwr,upr} the lower and upper bound,
@@ -30,7 +31,7 @@ NULL
 #'  that is, the upper bound for \code{x[i]<s<x[i+1]} is \code{upr[i+1]},
 #'  and the lower bound for \code{x[i]<s<x[i+1]} is \code{lwr[i]}.\cr
 #'  \code{cal} \tab a tibble holding the areas/segments of calibration (\code{out=0}) and miscalibration (\code{out=1}).  \cr
-#'  \code{bins} \tab a tibble of the characteristics of the recalibrated  bins. \cr
+#'  \code{bins} \tab a tibble of the characteristics of the isotonic bins. \cr
 #'  \code{cases} \tab tibble of all predictions and observations.
 #'  In addition it holds the column \code{isoy}, which is the isotonic
 #'  regression of \code{y} at points \code{x}.   \cr

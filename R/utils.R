@@ -151,7 +151,9 @@ checkcrossings <- function(object){
         min_x = min(x),
         max_x = max(x)
       ) %>%
-      dplyr::mutate(range = max_x-min_x)
+      dplyr::mutate(
+        range = max_x-min_x
+        )
   }
   return(crossings)
 }
