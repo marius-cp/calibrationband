@@ -14,7 +14,8 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "marius.puke@uni-hohenheim.de"))
 Description: Package to assess the calibration of probabilistic classifiers using confidence bands for monotonic functions. Besides testing the classical goodness-of-fit null hypothesis of perfect calibration, the confidence bands calculated within that package facilitate inverted goodness-of-fit tests whose rejection allows for a sought-after conclusion of a sufficiently well-calibrated model. The package creates flexible graphical tools to perform these tests.  For construction details see also Dimitriadis, Dümbgen, Henzi, Puke, Ziegel (2022) <arXiv:2203.04065>. 
-URL: https://github.com/marius-cp/calibrationband
+URL: https://github.com/marius-cp/calibrationband,
+    https://marius-cp.github.io/calibrationband/
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
