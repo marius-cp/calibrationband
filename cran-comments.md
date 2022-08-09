@@ -13,3 +13,13 @@ Maintainer: 'Marius Puke <marius.puke@uni-hohenheim.de>'
 
 The note concerns ".o" and ".dll" documents in the "src" folder. On MacOS operating system this note did not appear. Therefore, it seems to be a local problem that is not relevant for the actual creation of the package. 
 
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+  * written TRUE and FALSE instead of T and F. 
+  
+  * added a one paragraph description. 
+  
+  
+  

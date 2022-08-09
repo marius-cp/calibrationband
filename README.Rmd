@@ -14,13 +14,21 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
   [![R build status](https://github.com/marius-cp/calibrationband/workflows/R-CMD-check/badge.svg)](https://github.com/marius-cp/calibrationband/actions)
-  <!-- badges: end -->
+[![CRAN status](https://www.r-pkg.org/badges/version/calibrationband)](https://CRAN.R-project.org/package=calibrationband)
+<!-- badges: end -->
   
 # calibrationbands
 
 An R package to assess calibration of binary outcome predictions. Authored by Timo Dimitriadis (Heidelberg University), Alexander Henzi (University of Bern), and Marius Puke (University of Hohenheim). 
   
 ## Installation
+
+calibrationband is available on [The Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/package=calibrationband).
+
+```{r, eval = FALSE}
+install.packages("calibrationband")
+```
+
 ### Development version
 
 The most current version is available from GitHub.
@@ -56,5 +64,5 @@ autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = 
     p_ribbon = list(alpha = .1, fill = "red", colour = "purple")
                      )
 ```
-```
+
 

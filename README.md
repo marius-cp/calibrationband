@@ -3,6 +3,8 @@
 
 [![R build
 status](https://github.com/marius-cp/calibrationband/workflows/R-CMD-check/badge.svg)](https://github.com/marius-cp/calibrationband/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/calibrationband)](https://CRAN.R-project.org/package=calibrationband)
 <!-- badges: end -->
 
 # calibrationbands
@@ -12,6 +14,13 @@ Authored by Timo Dimitriadis (Heidelberg University), Alexander Henzi
 (University of Bern), and Marius Puke (University of Hohenheim).
 
 ## Installation
+
+calibrationband is available on [The Comprehensive R Archive Network
+(CRAN)](https://cran.r-project.org/package=calibrationband).
+
+``` r
+install.packages("calibrationband")
+```
 
 ### Development version
 
@@ -40,14 +49,15 @@ print(cb) # prints autoplot and summary, see also autoplot(.) and summary(.)
 
 ![](man/figures/README-example-1.png)<!-- -->
 
-    #> Areas of misscalibration (ordered by length). In addition there are 1 more. 
-    #> # A tibble: 4 × 2
-    #>    min_x max_x
-    #>    <dbl> <dbl>
-    #> 1 0.0396 0.299
-    #> 2 0.693  0.951
-    #> 3 0.957  0.957
-    #> # … with 1 more row
+    #> 
+    #>  Areas of misscalibration (ordered by length). In addition there are 2 more. 
+    #> # A tibble: 5 × 2
+    #>    min_x  max_x
+    #>    <dbl>  <dbl>
+    #> 1 0.0396 0.299 
+    #> 2 0.693  0.951 
+    #> 3 0.0389 0.0393
+    #> # … with 2 more rows
 
 Use `ggplot2:autolayer` to customize the plot.
 
@@ -62,4 +72,4 @@ autoplot(cb,approx.equi=500, cut.bands = F,p_isoreg = NA,p_ribbon = NA,p_diag = 
                      )
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- --> \`\`\`
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
